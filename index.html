@@ -303,13 +303,14 @@
         <!-- Chinese Cuisine Page -->
         <div id="chinese-page" class="page">
             <div class="header">
-                <h1 class="cuisine-title">🥢 Chinese Cuisine Slot Machine</h1>
+                <h1 class="cuisine-title">😈 Jiaxing</h1>
             </div>
 
             <div class="nav-buttons">
                 <button class="nav-btn" onclick="showPage('main-page')">🌍 All Cuisines</button>
                 <button class="nav-btn active" onclick="showPage('chinese-page')">🥢 Chinese Only</button>
                 <button class="nav-btn" onclick="showPage('western-page')">🍔 Western Only</button>
+                <button class="nav-btn" onclick="showPage('jiaxing-page')">😈 Jiaxing</button>
             </div>
 
             <div class="slot-machine">
@@ -361,6 +362,62 @@
                 <button class="nav-btn" onclick="showPage('main-page')">🌍 All Cuisines</button>
                 <button class="nav-btn" onclick="showPage('chinese-page')">🥢 Chinese Only</button>
                 <button class="nav-btn active" onclick="showPage('western-page')">🍔 Western Only</button>
+                <button class="nav-btn" onclick="showPage('jiaxing-page')">😈 Jiaxing</button>
+            </div>
+
+            <div class="slot-machine">
+                <div class="slots-container">
+                    <div class="slot" id="westernSlot1">
+                        <div class="slot-content">
+                            <div class="slot-text">Western Style</div>
+                            <div class="slot-subtext">Regional cuisine</div>
+                        </div>
+                    </div>
+                    
+                    <div class="arrow">→</div>
+                    
+                    <div class="slot" id="westernSlot2">
+                        <div class="slot-content">
+                            <div class="slot-text">Dish</div>
+                            <div class="slot-subtext">Classic recipe</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="drink-section">
+                    <h3>🥤 Western Drink Pairing</h3>
+                    <div class="drink-slot" id="westernDrinkSlot">
+                        <div class="slot-content">
+                            <div class="slot-text">Beverage</div>
+                            <div class="slot-subtext">Perfect pairing</div>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="spin-button" onclick="spinSlots('western')">
+                    🎰 SPIN FOR WESTERN FOOD! 🎰
+                </button>
+
+                <div class="result-display" id="westernResultDisplay">
+                    Explore delicious Western dishes!
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // jiaxing page//
+         <!-- Western Cuisine Page -->
+        <div id="western-page" class="page">
+            <div class="header">
+                <h1 class="cuisine-title">🍔 Western Cuisine Slot Machine</h1>
+            </div>
+
+            <div class="nav-buttons">
+                <button class="nav-btn" onclick="showPage('main-page')">🌍 All Cuisines</button>
+                <button class="nav-btn" onclick="showPage('chinese-page')">🥢 Chinese Only</button>
+                <button class="nav-btn active" onclick="showPage('western-page')">🍔 Western Only</button>
+                <button class="nav-btn" onclick="showPage('jiaxing-page')">😈 Jiaxing</button>
             </div>
 
             <div class="slot-machine">
