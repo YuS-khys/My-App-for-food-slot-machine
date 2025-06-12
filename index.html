@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Slot Machine 🎰</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .nav-btn {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a52);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        .nav-btn.active {
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+        }
+
+        .slot-machine {
+            background: linear-gradient(145deg, #2c3e50, #34495e);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 20px auto;
+            max-width: 800px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            position: relative;
+        }
+
+        .slots-container {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .slot {
+            background: white;
+            border-radius: 15px;
+            width: 200px;
+            height: 250px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: inset 0 4px 8px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .slot.spinning {
+            animation: spin 1s ease-in-out;
+            background: linear-gradient(45deg, #ffecd2, #fcb69f);
+        }
+
+        @keyframes spin {
+            0% { transform: rotateY(0deg); }
+            50% { transform: rotateY(180deg); }
+            100% { transform: rotateY(360deg); }
+        }
+
+        .slot-content {
+            text-align: center;
+            color: #2c3e50;
+            padding: 10px;
+        }
+
+        .slot-image {
+            width: 120px;
+            height: 120px;
+            border-radius: 10px;
+            object-fit: cover;
+            margin-bottom: 10px;
+            border: 3px solid #3498db;
+        }
+
+        .slot-text {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .slot-subtext {
+            font-size: 12px;
+            color: #7f8c8d;
+        }
+
+        .arrow {
+            font-size: 3em;
+            color: #e74c3c;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .drink-section {
+            border: 3px dashed #f39c12;
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+            background: rgba(243, 156, 18, 0.1);
+        }
+
+        .drink-section h3 {
+            text-align: center;
+            margin-bottom: 15px;
+            color: #f39c12;
+        }
+
+        .drink-slot {
+            background: white;
+            border-radius: 15px;
+            width: 180px;
+            height: 200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .spin-button {
+            background: linear-gradient(45deg, #ff9a9e, #fecfef);
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            color: #2c3e50;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            margin: 20px auto;
+            display: block;
+        }
+
+        .spin-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        .spin-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .result-display {
+            text-align: center;
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            min-height: 60px;
+        }
+
+        .cuisine-title {
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            color: #f39c12;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        @media (max-width: 768px) {
+            .slots-container {
+                flex-direction: column;
+            }
+            
+            .slot {
+                width: 250px;
+            }
+            
+            .arrow {
+                transform: rotate(90deg);
+                margin: 10px 0;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Main Page -->
+        <div id="main-page" class="page active">
+            <div class="header">
+                <h1>🎰 Food Slot Machine 🍽️</h1>
+                <p>Can't decide what to eat? Let the slots decide for you!</p>
+            </div>
+
+            <div class="nav-buttons">
+                <button class="nav-btn active" onclick="showPage('main-page')">🌍 All Cuisines</button>
+                <button class="nav-btn" onclick="showPage('chinese-page')">🥢 Chinese Only</button>
+                <button class="nav-btn" onclick="showPage('western-page')">🍔 Western Only</button>
+            </div>
+
+            <div class="slot-machine">
+                <div class="slots-container">
+                    <div class="slot" id="slot1">
+                        <div class="slot-content">
+                            <div class="slot-text">Food Genre</div>
+                            <div class="slot-subtext">Spin to choose!</div>
+                        </div>
+                    </div>
+                    
+                    <div class="arrow">→</div>
+                    
+                    <div class="slot" id="slot2">
+                        <div class="slot-content">
+                            <div class="slot-text">Sub-Category</div>
+                            <div class="slot-subtext">Depends on Genre</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="drink-section">
+                    <h3>🥤 Perfect Drink Pairing</h3>
+                    <div class="drink-slot" id="drinkSlot">
+                        <div class="slot-content">
+                            <div class="slot-text">Drink</div>
+                            <div class="slot-subtext">Pairs with your meal</div>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="spin-button" id="spinBtn" onclick="spinSlots('main')">
+                    🎰 SPIN THE SLOTS! 🎰
+                </button>
+
+                <div class="result-display" id="resultDisplay">
+                    Click the spin button to discover your perfect meal!
+                </div>
+            </div>
+        </div>
+
+        <!-- Chinese Cuisine Page -->
+        <div id="chinese-page" class="page">
+            <div class="header">
+                <h1 class="cuisine-title">🥢 Chinese Cuisine Slot Machine</h1>
+            </div>
+
+            <div class="nav-buttons">
+                <button class="nav-btn" onclick="showPage('main-page')">🌍 All Cuisines</button>
+                <button class="nav-btn active" onclick="showPage('chinese-page')">🥢 Chinese Only</button>
+                <button class="nav-btn" onclick="showPage('western-page')">🍔 Western Only</button>
+            </div>
+
+            <div class="slot-machine">
+                <div class="slots-container">
+                    <div class="slot" id="chineseSlot1">
+                        <div class="slot-content">
+                            <div class="slot-text">Chinese Style</div>
+                            <div class="slot-subtext">Regional cuisine</div>
+                        </div>
+                    </div>
+                    
+                    <div class="arrow">→</div>
+                    
+                    <div class="slot" id="chineseSlot2">
+                        <div class="slot-content">
+                            <div class="slot-text">Dish</div>
+                            <div class="slot-subtext">Traditional recipe</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="drink-section">
+                    <h3>🍵 Chinese Drink Pairing</h3>
+                    <div class="drink-slot" id="chineseDrinkSlot">
+                        <div class="slot-content">
+                            <div class="slot-text">Tea/Drink</div>
+                            <div class="slot-subtext">Perfect match</div>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="spin-button" onclick="spinSlots('chinese')">
+                    🎰 SPIN FOR CHINESE FOOD! 🎰
+                </button>
+
+                <div class="result-display" id="chineseResultDisplay">
+                    Discover authentic Chinese flavors!
+                </div>
+            </div>
+        </div>
+
+        <!-- Western Cuisine Page -->
+        <div id="western-page" class="page">
+            <div class="header">
+                <h1 class="cuisine-title">🍔 Western Cuisine Slot Machine</h1>
+            </div>
+
+            <div class="nav-buttons">
+                <button class="nav-btn" onclick="showPage('main-page')">🌍 All Cuisines</button>
+                <button class="nav-btn" onclick="showPage('chinese-page')">🥢 Chinese Only</button>
+                <button class="nav-btn active" onclick="showPage('western-page')">🍔 Western Only</button>
+            </div>
+
+            <div class="slot-machine">
+                <div class="slots-container">
+                    <div class="slot" id="westernSlot1">
+                        <div class="slot-content">
+                            <div class="slot-text">Western Style</div>
+                            <div class="slot-subtext">Regional cuisine</div>
+                        </div>
+                    </div>
+                    
+                    <div class="arrow">→</div>
+                    
+                    <div class="slot" id="westernSlot2">
+                        <div class="slot-content">
+                            <div class="slot-text">Dish</div>
+                            <div class="slot-subtext">Classic recipe</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="drink-section">
+                    <h3>🥤 Western Drink Pairing</h3>
+                    <div class="drink-slot" id="westernDrinkSlot">
+                        <div class="slot-content">
+                            <div class="slot-text">Beverage</div>
+                            <div class="slot-subtext">Perfect pairing</div>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="spin-button" onclick="spinSlots('western')">
+                    🎰 SPIN FOR WESTERN FOOD! 🎰
+                </button>
+
+                <div class="result-display" id="westernResultDisplay">
+                    Explore delicious Western dishes!
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Food data structure
+        const foodData = {
+            main: {
+                Asian: {
+                    Chinese: ['Kung Pao Chicken', 'Sweet and Sour Pork', 'Mapo Tofu', 'Peking Duck'],
+                    Japanese: ['Sushi', 'Ramen', 'Tempura', 'Teriyaki Chicken'],
+                    Thai: ['Pad Thai', 'Tom Yum Soup', 'Green Curry', 'Mango Sticky Rice'],
+                    Korean: ['Bibimbap', 'Kimchi Fried Rice', 'Bulgogi', 'Korean BBQ']
+                },
+                Western: {
+                    American: ['Burger', 'Mac and Cheese', 'BBQ Ribs', 'Fried Chicken'],
+                    Italian: ['Pizza Margherita', 'Spaghetti Carbonara', 'Lasagna', 'Risotto'],
+                    Mexican: ['Tacos', 'Burrito', 'Quesadilla', 'Enchiladas'],
+                    French: ['Croissant', 'French Onion Soup', 'Coq au Vin', 'Crème Brûlée']
+                }
+            },
+            chinese: {
+                'Sichuan': ['Mapo Tofu', 'Kung Pao Chicken', 'Dan Dan Noodles', 'Hot Pot'],
+                'Cantonese': ['Dim Sum', 'Sweet and Sour Pork', 'Char Siu', 'Wonton Soup'],
+                'Beijing': ['Peking Duck', 'Zhajiangmian', 'Mongolian Beef', 'Dumplings'],
+                'Shanghai': ['Xiaolongbao', 'Shanghai Noodles', 'Red Braised Pork', 'Scallion Oil Noodles']
+            },
+            western: {
+                'Italian': ['Pizza Margherita', 'Spaghetti Carbonara', 'Lasagna', 'Risotto Milanese'],
+                'American': ['Cheeseburger', 'Mac and Cheese', 'BBQ Ribs', 'Buffalo Wings'],
+                'French': ['Coq au Vin', 'Beef Bourguignon', 'Ratatouille', 'Croque Monsieur'],
+                'Mexican': ['Tacos al Pastor', 'Burrito Bowl', 'Quesadilla', 'Chiles Rellenos']
+            }
+        };
+
+        const drinkPairings = {
+            main: {
+                Asian: ['Green Tea', 'Jasmine Tea', 'Sake', 'Thai Iced Tea'],
+                Western: ['Coca Cola', 'Beer', 'Red Wine', 'Iced Coffee']
+            },
+            chinese: ['Green Tea', 'Oolong Tea', 'Jasmine Tea', 'Chinese Rice Wine'],
+            western: ['Red Wine', 'Craft Beer', 'Sparkling Water', 'Fresh Juice']
+        };
+
+        // Image URLs for different foods (using placeholder service)
+        const foodImages = {
+            // Main cuisine images
+            'Kung Pao Chicken': 'https://images.unsplash.com/photo-1563379091639-cdcb3c999866?w=300&h=300&fit=crop',
+            'Sweet and Sour Pork': 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=300&h=300&fit=crop',
+            'Mapo Tofu': 'https://images.unsplash.com/photo-1582878826629-29b7ad1cdc43?w=300&h=300&fit=crop',
+            'Peking Duck': 'https://images.unsplash.com/photo-1567620832903-9fc6debc209f?w=300&h=300&fit=crop',
+            'Sushi': 'https://images.unsplash.com/photo-1553621042-f6e147245754?w=300&h=300&fit=crop',
+            'Ramen': 'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=300&h=300&fit=crop',
+            'Tempura': 'https://images.unsplash.com/photo-1604357509355-638e78b5fca0?w=300&h=300&fit=crop',
+            'Teriyaki Chicken': 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=300&h=300&fit=crop',
+            'Pad Thai': 'https://images.unsplash.com/photo-1559314809-0f31657216aa?w=300&h=300&fit=crop',
+            'Tom Yum Soup': 'https://images.unsplash.com/photo-1547826039-bfc35e0f1ea8?w=300&h=300&fit=crop',
+            'Burger': 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=300&h=300&fit=crop',
+            'Pizza Margherita': 'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=300&h=300&fit=crop',
+            'Tacos': 'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=300&h=300&fit=crop',
+            'Lasagna': 'https://images.unsplash.com/photo-1621996346565-e3dbc353d2e5?w=300&h=300&fit=crop',
+            
+            // Drink images
+            'Green Tea': 'https://images.unsplash.com/photo-1564890273409-d5df5faf6a44?w=200&h=200&fit=crop',
+            'Jasmine Tea': 'https://images.unsplash.com/photo-1571934811356-5cc061b6821f?w=200&h=200&fit=crop',
+            'Coca Cola': 'https://images.unsplash.com/photo-1520342868574-5fa3804e551c?w=200&h=200&fit=crop',
+            'Beer': 'https://images.unsplash.com/photo-1608270586620-248524c67de9?w=200&h=200&fit=crop',
+            'Red Wine': 'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=200&h=200&fit=crop',
+            'Sake': 'https://images.unsplash.com/photo-1591023455440-e861e585e4d3?w=200&h=200&fit=crop'
+        };
+
+        // Default images for items without specific images
+        const defaultFoodImage = 'https://images.unsplash.com/photo-1546554137-f86b9593a222?w=300&h=300&fit=crop';
+        const defaultDrinkImage = 'https://images.unsplash.com/photo-1544145945-f90425340c7e?w=200&h=200&fit=crop';
+
+        let currentSpinning = false;
+
+        function showPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Show selected page
+            document.getElementById(pageId).classList.add('active');
+            
+            // Update nav buttons
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        function getRandomItem(array) {
+            return array[Math.floor(Math.random() * array.length)];
+        }
+
+        function getImageUrl(itemName) {
+            return foodImages[itemName] || defaultFoodImage;
+        }
+
+        function getDrinkImageUrl(drinkName) {
+            return foodImages[drinkName] || defaultDrinkImage;
+        }
+
+        function updateSlotContent(slotId, content, imageUrl = null) {
+            const slot = document.getElementById(slotId);
+            const slotContent = slot.querySelector('.slot-content');
+            
+            if (imageUrl) {
+                slotContent.innerHTML = `
+                    <img src="${imageUrl}" alt="${content}" class="slot-image" onerror="this.src='${defaultFoodImage}'">
+                    <div class="slot-text">${content}</div>
+                `;
+            } else {
+                slotContent.innerHTML = `
+                    <div class="slot-text">${content}</div>
+                `;
+            }
+        }
+
+        async function spinSlots(type) {
+            if (currentSpinning) return;
+            currentSpinning = true;
+            
+            const spinButton = document.querySelector('.spin-button');
+            spinButton.disabled = true;
+            spinButton.textContent = 'SPINNING...';
+            
+            let slot1Id, slot2Id, drinkSlotId, resultDisplayId;
+            let data, drinks;
+            
+            // Set up IDs based on page type
+            if (type === 'main') {
+                slot1Id = 'slot1';
+                slot2Id = 'slot2';
+                drinkSlotId = 'drinkSlot';
+                resultDisplayId = 'resultDisplay';
+                data = foodData.main;
+                drinks = drinkPairings.main;
+            } else if (type === 'chinese') {
+                slot1Id = 'chineseSlot1';
+                slot2Id = 'chineseSlot2';
+                drinkSlotId = 'chineseDrinkSlot';
+                resultDisplayId = 'chineseResultDisplay';
+                data = foodData.chinese;
+                drinks = drinkPairings.chinese;
+            } else if (type === 'western') {
+                slot1Id = 'westernSlot1';
+                slot2Id = 'westernSlot2';
+                drinkSlotId = 'westernDrinkSlot';
+                resultDisplayId = 'westernResultDisplay';
+                data = foodData.western;
+                drinks = drinkPairings.western;
+            }
+
+            // Spin first slot
+            document.getElementById(slot1Id).classList.add('spinning');
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            const firstChoice = getRandomItem(Object.keys(data));
+            updateSlotContent(slot1Id, firstChoice);
+            document.getElementById(slot1Id).classList.remove('spinning');
+            
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            // Spin second slot
+            document.getElementById(slot2Id).classList.add('spinning');
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            let secondChoice, finalDish;
+            if (type === 'main') {
+                secondChoice = getRandomItem(Object.keys(data[firstChoice]));
+                finalDish = getRandomItem(data[firstChoice][secondChoice]);
+                updateSlotContent(slot2Id, `${secondChoice} - ${finalDish}`, getImageUrl(finalDish));
+            } else {
+                finalDish = getRandomItem(data[firstChoice]);
+                updateSlotContent(slot2Id, finalDish, getImageUrl(finalDish));
+            }
+            
+            document.getElementById(slot2Id).classList.remove('spinning');
+            
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            // Spin drink slot
+            document.getElementById(drinkSlotId).classList.add('spinning');
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            let drink;
+            if (type === 'main') {
+                drink = getRandomItem(drinks[firstChoice]);
+            } else {
+                drink = getRandomItem(drinks);
+            }
+            
+            updateSlotContent(drinkSlotId, drink, getDrinkImageUrl(drink));
+            document.getElementById(drinkSlotId).classList.remove('spinning');
+            
+            // Update result display
+            let resultText;
+            if (type === 'main') {
+                resultText = `🎉 Perfect! Try ${finalDish} (${firstChoice} → ${secondChoice}) with ${drink}! 🎉`;
+            } else {
+                resultText = `🎉 Delicious! Try ${finalDish} (${firstChoice} style) with ${drink}! 🎉`;
+            }
+            
+            document.getElementById(resultDisplayId).innerHTML = resultText;
+            
+            // Reset button
+            currentSpinning = false;
+            spinButton.disabled = false;
+            spinButton.textContent = '🎰 SPIN AGAIN! 🎰';
+        }
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Food Slot Machine loaded successfully! 🎰');
+        });
+    </script>
+</body>
+</html>
